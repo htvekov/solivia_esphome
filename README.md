@@ -1,6 +1,6 @@
 
 #          ESPHome Custom Component Modbus sniffer for Delta Solvia Inverter 3.0 EU G4 TR installed with Solivia Gateway M1 D2.
-===============================================================================================================================
+=
 
 Remember to copy the Custom Component solivia.h file to the ESPHome folder in
 Home Assistant !!
@@ -62,8 +62,9 @@ Haven't really spend much time on testing further commands, as all the data
 i need is in gateway package.
 But commmand for eg. inverters serial no. is working ok on my inverter.
 ```yaml
-- uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03]``` will response
- correctly with serial no.
+- uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03]
+```
+will responsecorrectly with serial no.
 
 ## Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
