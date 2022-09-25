@@ -1,8 +1,7 @@
 
 #          ESPHome Custom Component Modbus sniffer for Delta Solvia Inverter 3.0 EU G4 TR installed with Solivia Gateway M1 D2.
-=
 
-Remember to copy the Custom Component solivia.h file to the ESPHome folder in
+### Remember to copy the Custom Component solivia.h file to the ESPHome folder in
 Home Assistant !!
 
 This config doesn't send any commands to the inverter !!
@@ -64,11 +63,11 @@ But commmand for eg. inverters serial no. is working ok on my inverter.
 ```yaml
 - uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03]
 ```
-will responsecorrectly with serial no.
+will response correctly with serial no.
 
 ## Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
-```yaml
+```python
 Request:  02:05:01:02:60:01:85:FC:03
 Response: 02:06:01:FF:60:01
 Package data:
@@ -120,7 +119,9 @@ Register address:
 
 ## Observations on the unknown registers:
 
+```python
 0x64 - 0x64: Unknown register ?
+```
 Only 0x00, 0xff and some rare 0xfe value have been observed. 0x00 when there's no production. Otherwise 0xFF
 
 0x65 - 0x65: Unknown register ?
