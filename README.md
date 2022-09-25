@@ -85,7 +85,6 @@ Package data:
 0xF0   00:00:00:00:00:00:00:00:00:00:00:00:00:34:A4:03
 
 Register address:
-
 0x00 - 0x0A:	Part no.                  EOE46010287           45:4F:45:34:36:30:31:30:32:38:37
 0x0B - 0x1C:	Serial no.                113287081301003398    31:31:33:32:38:37:30:38:31:33:30:31:30:30:33:33:39:38
 0x1D - 0x22:  Install date (YYMMDD) ?   130108                31:33:30:31:30:38
@@ -107,11 +106,12 @@ Register address:
 0x7C - 0x7D:  ISO- resistance kΩ        2000                  07:D0
 0x7E - 0x7F:  Heat sink AC (50°C) ?     50                    00:33
 0x80 - 0x81:  Heat sink DC (50°C) ?     50                    00:33
-0x86 - 0x89   Total yield(34881,086kWh) 34881086              02:14:3E:3E
+0x86 - 0x89:  Total yield(34881,086kWh) 34881086              02:14:3E:3E
 0x8A - 0x8C:  Uptime total in minutes   2508966               00:26:48:A6
 0x91 - 0x91:  Inverter status ?         0                     00
 0xB4 - 0xB5:  Daily power yield Wh      2295                  08:F7
-0xB8 - 0xB9:  Uptime today in minutes   278                   01:16```
+0xB8 - 0xB9:  Uptime today in minutes   278                   01:16
+```
 
 Observations on the unknown registers:
 
