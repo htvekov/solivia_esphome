@@ -7,7 +7,7 @@ This config doesn't send any commands to the inverter !!
 Instead it relies on the gateways constant request for data (appx. 1 package pr. second).
 
 If you don't have a gateway, the package request can instead easily be send from
-ESPHome using uart.write and eg. triggered via the ESPHome Time component.
+ESPHome using `uart.write` and eg. triggered via the ESPHome Time component.
 
 ### Example:
 ```yaml
@@ -52,7 +52,7 @@ Inverter response: 02:06:01:FF:60:01 + 255 data bytes (incl. CRC bytes) + ETX by
 ```
 
 Actually the response doesn't match the protocol, as the CRC bytes and trailing
-ETX byte should be excluded from data length identifier (0xff)
+ETX byte should be excluded from data length identifier (0xFF)
 Here, strangely enough, the CRC is included, but not the ETX ?
 
 A few of the 'public known' commands have been tested. Most unfortunately did fail.
@@ -69,6 +69,7 @@ will response correctly with serial no.
 ```yaml
 Request:  02:05:01:02:60:01:85:FC:03
 Response: 02:06:01:FF:60:01
+
 Package data:
 0x00   45:4F:45:34:36:30:31:30:32:38:37:31:31:33:32:38
 0x10   37:30:38:31:33:30:31:30:30:33:33:39:38:31:33:30
