@@ -20,7 +20,8 @@ time:
        // Request package every 10 seconds from inverter at slave address: 0x01
       - seconds: /10
         then:
-          - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]```
+          - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]
+```
 
 NOTE !!
 My inverter, unlike most examples found on the net, returns a 255 bytes
@@ -44,8 +45,10 @@ Slave address: 0x01
 Baud rate: 19200
 Install country: Denmark
 
+```yaml
 Gateway request: 02:05:01:02:60:01:85:FC:03
 Inverter response: 02:06:01:FF:60:01 + 255 data bytes (incl. CRC bytes) + ETX byte
+```
 
 Actually the response doesn't match the protocol, as the CRC bytes and trailing
 ETX byte should be excluded from data length identifier (0xff)
@@ -60,7 +63,8 @@ But commmand for eg. inverters serial no. is working ok on my inverter.
 
 Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
-```Request:  02:05:01:02:60:01:85:FC:03
+```yaml
+Request:  02:05:01:02:60:01:85:FC:03
 Response: 02:06:01:FF:60:01
 Package data:
 0x00   45:4F:45:34:36:30:31:30:32:38:37:31:31:33:32:38
