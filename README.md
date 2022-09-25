@@ -11,6 +11,7 @@ If you don't have a gateway, the package request can instead easily be send from
 ESPHome using uart.write and eg. triggered via the ESPHome Time component.
 
 Example:
+```yaml
 time:
   - platform: homeassistant
     id: esptime
@@ -19,7 +20,7 @@ time:
        // Request package every 10 seconds from inverter at slave address: 0x01
       - seconds: /10
         then:
-          - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]
+          - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]```
 
 NOTE !!
 My inverter, unlike most examples found on the net, returns a 255 bytes
