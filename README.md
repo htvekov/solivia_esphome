@@ -1,5 +1,6 @@
 
 #          ESPHome Custom Component Modbus sniffer for Delta Solvia Inverter 3.0 EU G4 TR installed with Solivia Gateway M1 D2.
+===============================================================================================================================
 
 Remember to copy the Custom Component solivia.h file to the ESPHome folder in
 Home Assistant !!
@@ -10,7 +11,7 @@ Instead it relies on the gateways constant request for data (appx. 1 package pr.
 If you don't have a gateway, the package request can instead easily be send from
 ESPHome using uart.write and eg. triggered via the ESPHome Time component.
 
-##Example:
+## Example:
 ```yaml
 time:
   - platform: homeassistant
@@ -23,7 +24,7 @@ time:
           - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]
 ```
 
-NOTE !!
+## NOTE !!
 My inverter, unlike most examples found on the net, returns a 255 bytes
 response. Most common inverter response length is 150 bytes (0x96) or 157 (0x9D).
 So almost all commands/registers do not match other examples on the net.
@@ -37,7 +38,7 @@ Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
 Not even with debug uart logging active.
 
-##My config:
+## My config:
 ```
 Inverter part no.: EOE46010287
 Single string input PV1: 3500W
@@ -64,7 +65,7 @@ But commmand for eg. inverters serial no. is working ok on my inverter.
 - uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03]``` will response
  correctly with serial no.
 
-##Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
+## Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
 ```yaml
 Request:  02:05:01:02:60:01:85:FC:03
@@ -88,8 +89,8 @@ Package data:
 0xF0   00:00:00:00:00:00:00:00:00:00:00:00:00:34:A4:03
 
 Register address:
-0x00 - 0x0A:	Part no.                  EOE46010287           45:4F:45:34:36:30:31:30:32:38:37
-0x0B - 0x1C:	Serial no.                113287081301003398    31:31:33:32:38:37:30:38:31:33:30:31:30:30:33:33:39:38
+0x00 - 0x0A:  Part no.                  EOE46010287           45:4F:45:34:36:30:31:30:32:38:37
+0x0B - 0x1C:  Serial no.                113287081301003398    31:31:33:32:38:37:30:38:31:33:30:31:30:30:33:33:39:38
 0x1D - 0x22:  Install date (YYMMDD) ?   130108                31:33:30:31:30:38
 0x23 - 0x25:  FW rev. system            1.02.26               01:02:1A
 0x29 - 0x2B:  FW Rev. DC, AC or RTS ?   0.35.52               00:23:34
@@ -116,7 +117,7 @@ Register address:
 0xB8 - 0xB9:  Uptime today in minutes   278                   01:16
 ```
 
-Observations on the unknown registers:
+## Observations on the unknown registers:
 
 0x64 - 0x64: Unknown register ?
 Only 0x00, 0xff and some rare 0xfe value have been observed. 0x00 when there's no production. Otherwise 0xFF
