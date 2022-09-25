@@ -59,7 +59,7 @@ But commmand for eg. inverters serial no. is working ok on my inverter.
 
 Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
-Request:  02:05:01:02:60:01:85:FC:03
+```Request:  02:05:01:02:60:01:85:FC:03
 Response: 02:06:01:FF:60:01
 Package data:
 0x00   45:4F:45:34:36:30:31:30:32:38:37:31:31:33:32:38
@@ -106,7 +106,7 @@ Register address:
 0x8A - 0x8C:  Uptime total in minutes   2508966               00:26:48:A6
 0x91 - 0x91:  Inverter status ?         0                     00
 0xB4 - 0xB5:  Daily power yield Wh      2295                  08:F7
-0xB8 - 0xB9:  Uptime today in minutes   278                   01:16
+0xB8 - 0xB9:  Uptime today in minutes   278                   01:16```
 
 Observations on the unknown registers:
 
