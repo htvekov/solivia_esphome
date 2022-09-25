@@ -1,8 +1,7 @@
 
 #          ESPHome Custom Component Modbus sniffer for Delta Solvia Inverter 3.0 EU G4 TR installed with Solivia Gateway M1 D2.
 
-### Remember to copy the Custom Component solivia.h file to the ESPHome folder in
-Home Assistant !!
+### Remember to copy the Custom Component solivia.h file to the ESPHome folder in Home Assistant !!
 
 This config doesn't send any commands to the inverter !!
 Instead it relies on the gateways constant request for data (appx. 1 package pr. second).
@@ -10,7 +9,7 @@ Instead it relies on the gateways constant request for data (appx. 1 package pr.
 If you don't have a gateway, the package request can instead easily be send from
 ESPHome using uart.write and eg. triggered via the ESPHome Time component.
 
-## Example:
+### Example:
 ```yaml
 time:
   - platform: homeassistant
@@ -23,7 +22,7 @@ time:
           - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]
 ```
 
-## NOTE !!
+### NOTE !!
 My inverter, unlike most examples found on the net, returns a 255 bytes
 response. Most common inverter response length is 150 bytes (0x96) or 157 (0x9D).
 So almost all commands/registers do not match other examples on the net.
@@ -37,7 +36,7 @@ Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
 Not even with debug uart logging active.
 
-## My config:
+### My config:
 ```
 Inverter part no.: EOE46010287
 Single string input PV1: 3500W
@@ -65,9 +64,9 @@ But commmand for eg. inverters serial no. is working ok on my inverter.
 ```
 will response correctly with serial no.
 
-## Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
+### Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
-```python
+```yaml
 Request:  02:05:01:02:60:01:85:FC:03
 Response: 02:06:01:FF:60:01
 Package data:
@@ -117,23 +116,28 @@ Register address:
 0xB8 - 0xB9:  Uptime today in minutes   278                   01:16
 ```
 
-## Observations on the unknown registers:
+### Observations on the unknown registers:
 
-```python
+```yaml
 0x64 - 0x64: Unknown register ?
 ```
 Only 0x00, 0xff and some rare 0xfe value have been observed. 0x00 when there's no production. Otherwise 0xFF
 
-0x65 - 0x65: Unknown register ?
+```yaml0x65 - 0x65: Unknown register ?
+```
 Fluctuates throughout the day. DC injector value mA ??
 
+```yaml
 0x7E - 0x7F: AC Heat sink register ?
 0x80 - 0x81: DC Heat sink register ?
+```
 The two heat sink registers has during a three day test period been completely identical.
 So there's most likely only one physical sensor in my inverter.
 When inverter is is production mode, values have been in the range from 36 - 62°C throughout the day (high summer period)
 
+```yaml
 0x91 - 0x91: Device status register ?
+```
 When inverter is active value is 0. When inactive value is 4
 On device init in the morning value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
 Sometimes values above 4 are also observed during inverter shutdown in the evening.
