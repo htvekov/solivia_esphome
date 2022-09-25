@@ -10,7 +10,7 @@ Instead it relies on the gateways constant request for data (appx. 1 package pr.
 If you don't have a gateway, the package request can instead easily be send from
 ESPHome using uart.write and eg. triggered via the ESPHome Time component.
 
-Example:
+##Example:
 ```yaml
 time:
   - platform: homeassistant
@@ -37,13 +37,15 @@ Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
 Not even with debug uart logging active.
 
-My config:
+##My config:
+```
 Inverter part no.: EOE46010287
 Single string input PV1: 3500W
 Single phase output: L1
 Slave address: 0x01
 Baud rate: 19200
 Install country: Denmark
+```
 
 ```yaml
 Gateway request: 02:05:01:02:60:01:85:FC:03
@@ -58,10 +60,11 @@ A few of the 'public known' commands have been tested. Most unfortunately did fa
 Haven't really spend much time on testing further commands, as all the data
 i need is in gateway package.
 But commmand for eg. inverters serial no. is working ok on my inverter.
-- uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03] will response
+```yaml
+- uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03]``` will response
  correctly with serial no.
 
-Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
+##Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
 ```yaml
 Request:  02:05:01:02:60:01:85:FC:03
