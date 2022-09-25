@@ -121,11 +121,11 @@ Register address:
 ```yaml
 0x64 - 0x64: Unknown register ?
 ```
-Only 0x00, 0xff and some rare 0xfe value have been observed. 0x00 when there's no production. Otherwise 0xFF
+Only 0x00, 0xFF and some rare 0xFE value have been observed. 0x00 when there's no production. Otherwise 0xFF
 
 ```yaml0x65 - 0x65: Unknown register ?
 ```
-Fluctuates throughout the day. DC injector value mA ??
+Fluctuates throughout the day. DC injector value in mA ??
 
 ```yaml
 0x7E - 0x7F: AC Heat sink register ?
@@ -136,8 +136,8 @@ So there's most likely only one physical sensor in my inverter.
 When inverter is is production mode, values have been in the range from 36 - 62°C throughout the day (high summer period)
 
 ```yaml
-0x91 - 0x91: Device status register ?
+0x91 - 0x91: Inverter status register ?
 ```
-When inverter is active value is 0. When inactive value is 4
-On device init in the morning value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
+When inverter is active value is 0. When inactive value is 4.
+On device init in the morning, value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
 Sometimes values above 4 are also observed during inverter shutdown in the evening.
