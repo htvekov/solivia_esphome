@@ -29,6 +29,7 @@ So almost all commands/registers do not match other examples on the net.
 Package structure is also somewhat different.
 
 A list of all Delata Solivia inverters registers and the communication protocol is published and can be found here https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf
+With this list it will be easy to tweak my configuration to fit your inverter variant.
 
 Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
@@ -96,18 +97,18 @@ Register address:
 0x2F - 0x31:  SW Rev. DC controller       0.35.52               00:23:34
 0x3B - 0x3D:  SW Rev. AC controller       0.35.52               00:23:34
 0x47 - 0x49:  SW revision reserved        0.1.0                 00:01:00
-0x4A - 0x4B:  DC Power PV1                918                   03:96
-0x4C - 0x4D:  DC voltage PV1              410                   01:9A
+0x4A - 0x4B:  DC Power PV1 W              918                   03:96
+0x4C - 0x4D:  DC voltage PV1 V            410                   01:9A
 0x4E - 0x4F:  DC current PV1 (2,2 A)      22                    00:16
 0x5C - 0x5D:  AC current L1 (3,5 A)       35                    00:23
-0x5E - 0x5F:  AC voltage L1               236                   00:EC
+0x5E - 0x5F:  AC voltage L1 V             236                   00:EC
 0x60 - 0x61:  AC frequency (50,00 Hz)     5000                  13:88
-0x62 - 0x63:  AC Power L1                 868                   03:64
-0x64 - 0x65:  AC Reactive Power(-178 VAR) -178                  FF:4E
+0x62 - 0x63:  AC Power L1 W               868                   03:64
+0x64 - 0x65:  AC Reactive Power VAR       -178                  FF:4E
 0x7A - 0x7B:  ISO+ resistance kΩ          2200                  08:98
 0x7C - 0x7D:  ISO- resistance kΩ          2000                  07:D0
-0x7E - 0x7F:  Temperature ambient (50°C)  50                    00:33
-0x80 - 0x81:  Temperature heatsink (50°C) 50                    00:33
+0x7E - 0x7F:  Temperature ambient °C      50                    00:33
+0x80 - 0x81:  Temperature heatsink °C     50                    00:33
 0x86 - 0x89:  Total yield (34881,086 kWh) 34881086              02:14:3E:3E
 0x8A - 0x8C:  Uptime total in minutes     2508966               00:26:48:A6
 0x91 - 0x91:  Inverter status ?           0                     00
