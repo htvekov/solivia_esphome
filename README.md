@@ -28,9 +28,6 @@ response. Most common inverter response length is 150 bytes (0x96) or 157 (0x9D)
 So almost all commands/registers do not match other examples on the net.
 Package structure is also somewhat different.
 
-Below the actual ESPHome config, you'll find a compiled list of all registers
-I've identified.
-
 A list of all Delata Solivia inverters registers and the communication protocol is published and can be found here https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf
 
 Tested on both ESP8266 with software uart and ESP32 with hardware uart.
