@@ -135,7 +135,7 @@ sensor:
   lambda: |-
     auto delta = new solivia(id(mod_bus));
     App.register_component(delta);
-    return {delta->ac_power, delta->d_yield, delta->dc_a, delta->dc_v, delta->ac_a, delta->ac_v, delta->freq, delta->hs_1, delta->hs_2, delta->t_yield, delta->dc_power, delta->iso_plus, delta->iso_minus, delta->unknown_0x64, delta->unknown_0x65, delta->unknown_0x91};
+    return {delta->ac_power, delta->d_yield, delta->dc_a, delta->dc_v, delta->ac_a, delta->ac_v, delta->freq, delta->temp_amb, delta->temp_hs, delta->t_yield, delta->dc_power, delta->iso_plus, delta->iso_minus, delta->ac_react};
   sensors:
   - name: "AC power"
     #icon: mdi:SolarPowerVariant
@@ -194,13 +194,13 @@ sensor:
     - throttle: 60s
     - multiply: 0.01
   
-  - name: "Heat sink #1"
+  - name: "Temperature - ambient"
     device_class: temperature
     unit_of_measurement: °C
     filters:
     - throttle: 60s
   
-  - name: "Heat sink #2"
+  - name: "Temperature - heatsink"
     device_class: temperature
     unit_of_measurement: °C
     filters:
