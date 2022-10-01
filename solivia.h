@@ -85,11 +85,11 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
         iso_minus_data.Byte[1] = bytes[0x7C +6]; // ISO- msb
 
         TwoByte temp_amb_data;
-        temp_amb_data.Byte[0] = bytes[0x7F +6]; // Heat sink#1 lsb
-        temp_amb_data.Byte[1] = bytes[0x7E +6]; // Heat sink#1 msb
+        temp_amb_data.Byte[0] = bytes[0x7F +6]; // Temperature ambient lsb
+        temp_amb_data.Byte[1] = bytes[0x7E +6]; // Temperature ambient msb
         TwoByte temp_hs_data;
-        temp_hs_data.Byte[0] = bytes[0x81 +6]; // Heat sink#2 lsb
-        temp_hs_data.Byte[1] = bytes[0x80 +6]; // Heat sink#2 msb
+        temp_hs_data.Byte[0] = bytes[0x81 +6]; // Temperature heatsink lsb
+        temp_hs_data.Byte[1] = bytes[0x80 +6]; // Temperature heatsink msb
 
         TwoByte d_yield_data;
         d_yield_data.Byte[0] = bytes[0xB5 +6]; // Daily yield lsb
