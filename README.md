@@ -120,14 +120,14 @@ Register address:
 
 ### 0x91: Inverter status register 1:
 ```yaml
-bit 0 = 1 -> Self test ongoing
-bit 1 = 1 -> Firmware update
-bit 2 = 1 -> Night mode                   Check for Night mode
-bit 3 = 1 -> L1 Voltage failure           Check for L1 Voltage failure
-bit 4 = 1 -> L2 Voltage failure
-bit 5 = 1 -> L3 Voltage failure
-bit 6 = 1 -> L1 Frequency failure
-bit 7 = 1 -> L2 Frequency failure
+bit 00 = 1 -> Self test ongoing
+bit 01 = 1 -> Firmware update
+bit 02 = 1 -> Night mode                   Check for Night mode
+bit 03 = 1 -> L1 Voltage failure           Check for L1 Voltage failure
+bit 04 = 1 -> L2 Voltage failure
+bit 05 = 1 -> L3 Voltage failure
+bit 06 = 1 -> L1 Frequency failure
+bit 07 = 1 -> L2 Frequency failure
 ```
 
 When inverter is active value is 0. When inactive value is 4.
@@ -136,8 +136,8 @@ Sometimes values above 4 are also observed during inverter shutdown in the eveni
 
 ### 0x94: Inverter status register 2:
 ```yaml
-bit 8 = 1 -> PV3 Iso startup failure
-bit 9 = 1 -> PV3 Iso running failure
+bit 08 = 1 -> PV3 Iso startup failure
+bit 09 = 1 -> PV3 Iso running failure
 bit 10 = 1 -> PV3+ grounding failure
 bit 11 = 1 -> PV3- grounding failure
 bit 12 = 1 -> PV1 voltage too low failure   Check for PV1 voltage too low failure
