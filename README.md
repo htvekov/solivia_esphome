@@ -118,7 +118,7 @@ Register address:
 0xB8 - 0xB9:  Uptime today in minutes     278                   01:16
 ```
 
-### 0x91: Inverter status register 1:
+### 0x91: Inverter status register 1 (4 bytes - 32 bits in total):
 ```yaml
 bit 00 = 1 -> Self test ongoing
 bit 01 = 1 -> Firmware update
@@ -134,7 +134,7 @@ When inverter is active value is 0. When inactive value is 4.
 On device init in the morning, value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
 Sometimes values above 4 are also observed during inverter shutdown in the evening.
 
-### 0x94: Inverter status register 2:
+### 0x94: Inverter status register 2 (4 bytes - 32 bits in total):
 ```yaml
 bit 08 = 1 -> PV3 Iso startup failure
 bit 09 = 1 -> PV3 Iso running failure
