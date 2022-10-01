@@ -111,16 +111,37 @@ Register address:
 0x7E - 0x7F:  Temperature ambient °C      50                    00:33
 0x80 - 0x81:  Temperature heatsink °C     50                    00:33
 0x86 - 0x89:  Total yield (34881,086 kWh) 34881086              02:14:3E:3E
-0x8A - 0x8C:  Uptime total in minutes     2508966               00:26:48:A6
-0x91 - 0x91:  Inverter status ?           0                     00
+0x8A - 0x8D:  Uptime total in minutes     2508966               00:26:48:A6
+0x91 - 0x91:  Status 1 - bit 0 to 7       0                     00
+0x94 - 0x94:  Status 2 - bit 8 to 15      0                     00
 0xB4 - 0xB5:  Daily power yield Wh        2295                  08:F7
 0xB8 - 0xB9:  Uptime today in minutes     278                   01:16
 ```
 
-### Observations on the unknown registers:
-
-0x91 - 0x91: Inverter status register ?
+### 0x91: Inverter status register 1:
 ```
+bit 0 = 1 -> Self test ongoing
+bit 1 = 1 -> Firmware update
+### bit 2 = 1 -> Night mode
+### bit 3 = 1 -> L1 Voltage failure
+bit 4 = 1 -> L2 Voltage failure
+bit 5 = 1 -> L3 Voltage failure
+bit 6 = 1 -> L1 Frequency failure
+bit 7 = 1 -> L2 Frequency failure
+```
+
 When inverter is active value is 0. When inactive value is 4.
 On device init in the morning, value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
 Sometimes values above 4 are also observed during inverter shutdown in the evening.
+
+### 0x91: Inverter status register 2:
+```
+bit 8 = 1 -> PV3 Iso startup failure
+bit 9 = 1 -> PV3 Iso running failure
+bit 10 = 1 -> PV3+ grounding failure
+bit 11 = 1 -> PV3- grounding failure
+### bit 12 = 1 -> PV1 voltage too low failure
+bit 13 = 1 -> PV2 voltage too low failure
+bit 14 = 1 -> PV3 voltage too low failure
+bit 15 = 1 -> Internal failure
+```
