@@ -119,7 +119,6 @@ Register address:
 ```
 
 ### 0x91: Inverter status register 1:
-```
 bit 0 = 1 -> Self test ongoing
 bit 1 = 1 -> Firmware update
 ### bit 2 = 1 -> Night mode
@@ -134,8 +133,7 @@ When inverter is active value is 0. When inactive value is 4.
 On device init in the morning, value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
 Sometimes values above 4 are also observed during inverter shutdown in the evening.
 
-### 0x91: Inverter status register 2:
-```
+### 0x94: Inverter status register 2:
 bit 8 = 1 -> PV3 Iso startup failure
 bit 9 = 1 -> PV3 Iso running failure
 bit 10 = 1 -> PV3+ grounding failure
