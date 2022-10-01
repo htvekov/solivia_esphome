@@ -265,47 +265,34 @@ sensor:
 # 0xF0   00:00:00:00:00:00:00:00:00:00:00:00:00:34:A4:03
 #
 # Register address:
-#
-# 0x00 - 0x0A:	Part no.                  EOE46010287           45:4F:45:34:36:30:31:30:32:38:37
-# 0x0B - 0x1C:	Serial no.                113287081301003398    31:31:33:32:38:37:30:38:31:33:30:31:30:30:33:33:39:38
-# 0x1D - 0x22:  Install date (YYMMDD) ?   130108                31:33:30:31:30:38
-# 0x23 - 0x25:  FW rev. system            1.02.26               01:02:1A
-# 0x29 - 0x2B:  FW Rev. DC, AC or RTS ?   0.35.52               00:23:34
-# 0x2F - 0x31:  FW Rev. DC, AC or RTS ?   0.35.52               00:23:34
-# 0x3B - 0x3D:  FW Rev. DC, AC or RTS ?   0.35.52               00:23:34
-# 0x48 - 0x48:  Inverter slave address ?  1                     01
-# 0x4A - 0x4B:  DC Power PV1 ?            918                   03:96
-# 0x4C - 0x4D:  DC voltage PV1            410                   01:9A
-# 0x4E - 0x4F:  DC current PV1 (2,2 A)    22                    00:16
-# 0x5C - 0x5D:  AC current L1 (3,5 A)     35                    00:23
-# 0x5E - 0x5F:  AC voltage L1             236                   00:EC
-# 0x60 - 0x61:  AC frequency (50,00 Hz)   5000                  13:88
-# 0x62 - 0x63:  AC Power L1               868                   03:64
-# 0x64 - 0x64:  Unknown ?                 255                   FF
-# 0x65 - 0x65:  Unknown ?                 78                    4E
-# 0x7A - 0x7B:  ISO+ resistance kΩ        2200                  08:98
-# 0x7C - 0x7D:  ISO- resistance kΩ        2000                  07:D0
-# 0x7E - 0x7F:  Heat sink AC (50°C) ?     50                    00:33
-# 0x80 - 0x81:  Heat sink DC (50°C) ?     50                    00:33
-# 0x86 - 0x89   Total yield(34881,086kWh) 34881086              02:14:3E:3E
-# 0x8A - 0x8C:  Uptime total in minutes   2508966               00:26:48:A6
-# 0x91 - 0x91:  Inverter status ?         0                     00
-# 0xB4 - 0xB5:  Daily power yield Wh      2295                  08:F7
-# 0xB8 - 0xB9:  Uptime today in minutes   278                   01:16
+# 0x00 - 0x0A:  SAP part no.                EOE46010287           45:4F:45:34:36:30:31:30:32:38:37
+# 0x0B - 0x1C:  SAP serial no.              113287081301003398    31:31:33:32:38:37:30:38:31:33:30:31:30:30:33:33:39:38
+# 0x1D - 0x20:  SAP date code               1301                  31:33:30:31
+# 0x21 - 0x22:  SAP revision                08                    30:38
+# 0x23 - 0x25:  SW rev. System controller   1.02.26               01:02:1A
+# 0x29 - 0x2B:  SW rev. ENS controller      0.35.52               00:23:34
+# 0x2F - 0x31:  SW Rev. DC controller       0.35.52               00:23:34
+# 0x3B - 0x3D:  SW Rev. AC controller       0.35.52               00:23:34
+# 0x47 - 0x49:  SW revision reserved        0.1.0                 00:01:00
+# 0x4A - 0x4B:  DC Power PV1 W              918                   03:96
+# 0x4C - 0x4D:  DC voltage PV1 V            410                   01:9A
+# 0x4E - 0x4F:  DC current PV1 (2,2 A)      22                    00:16
+# 0x5C - 0x5D:  AC current L1 (3,5 A)       35                    00:23
+# 0x5E - 0x5F:  AC voltage L1 V             236                   00:EC
+# 0x60 - 0x61:  AC frequency (50,00 Hz)     5000                  13:88
+# 0x62 - 0x63:  AC Power L1 W               868                   03:64
+# 0x64 - 0x65:  AC Reactive Power L1 VAR    -178                  FF:4E
+# 0x7A - 0x7B:  ISO+ resistance kΩ          2200                  08:98
+# 0x7C - 0x7D:  ISO- resistance kΩ          2000                  07:D0
+# 0x7E - 0x7F:  Temperature ambient °C      50                    00:33
+# 0x80 - 0x81:  Temperature heatsink °C     50                    00:33
+# 0x86 - 0x89:  Total yield (34881,086 kWh) 34881086              02:14:3E:3E
+# 0x8A - 0x8C:  Uptime total in minutes     2508966               00:26:48:A6
+# 0x91 - 0x91:  Inverter status ?           0                     00
+# 0xB4 - 0xB5:  Daily power yield Wh        2295                  08:F7
+# 0xB8 - 0xB9:  Uptime today in minutes     278                   01:16
 #
 # Observations on the unknown registers:
-#
-# 0x64 - 0x64: Unknown register ?
-# Only 0x00, 0xff and some rare 0xfe value have been observed. 0x00 when there's no production. Otherwise 0xFF
-#
-# 0x65 - 0x65: Unknown register ?
-# Fluctuates throughout the day. DC injector value mA ??
-#
-# 0x7E - 0x7F: AC Heat sink register ?
-# 0x80 - 0x81: DC Heat sink register ?
-# The two heat sink registers has during a three day test period been completely identical.
-# So there's most likely only one physical sensor in my inverter.
-# When inverter is is production mode, values have been in the range from 36 - 62°C throughout the day (high summer period)
 #
 # 0x91 - 0x91: Device status register ?
 # When inverter is active value is 0. When inactive value is 4
