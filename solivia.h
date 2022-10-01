@@ -71,8 +71,11 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
         freq_data.Byte[0] = bytes[0x61 + 6]; // Frequency lsb
         freq_data.Byte[1] = bytes[0x60 + 6]; // Frequency msb
         TwoByte ac_power_data;
-        ac_power_data.Byte[0] = bytes[0x63 +6]; // AC Power lsb
-        ac_power_data.Byte[1] = bytes[0x62 +6]; // AC Power msb
+        ac_power_data.Byte[0] = bytes[0x63 +6]; // AC power lsb
+        ac_power_data.Byte[1] = bytes[0x62 +6]; // AC power msb
+	TwoByte ac_react_data;
+        ac_react_data.Byte[0] = bytes[0x65 +6]; // AC reactive power lsb
+        ac_react_data.Byte[1] = bytes[0x64 +6]; // AC reactive poser msb
         
         TwoByte iso_plus_data;
         iso_plus_data.Byte[0] = bytes[0x7B +6]; // ISO+ lsb
@@ -96,10 +99,6 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
             (unsigned char)(bytes[0x87 +6]) << 16 |
             (unsigned char)(bytes[0x88 +6]) << 8 |
             (unsigned char)(bytes[0x89 +6]));  // Total yield (4 bytes float)
-    
-        int16_t ac_react_data;
-        ac_react_data.Byte[0] = bytes[0x65 +6]; // Unknown lsb
-        ac_react_data.Byte[1] = bytes[0x64 +6]; // unknown msb
 
         char etx;
         etx = bytes[261]; // ETX byte (last byte)
@@ -122,11 +121,11 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
           ac_a->publish_state(ac_a_data.UInt16);
           ac_power->publish_state(ac_power_data.UInt16);
           freq->publish_state(freq_data.UInt16);
-          temp_amb->publish_state(temp_amb_data.UInt16);
-          temp_hs->publish_state(temp_hs_data.UInt16);
+          temp_amb->publish_state(temp_amb_data.Int16);
+          temp_hs->publish_state(temp_hs_data.Int16);
           iso_plus->publish_state(iso_plus_data.UInt16);
           iso_minus->publish_state(iso_minus_data.UInt16);
-	  ac_react->publish_state(ac_react_data.UInt16);
+	  ac_react->publish_state(ac_react_data.Int16);
         
 
 	        ESP_LOGI("custom", "ETX check OK: %i", etx);
