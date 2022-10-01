@@ -29,8 +29,9 @@ So almost all commands/registers do not match other examples on the net.
 Package structure is also somewhat different.
 
 Below the actual ESPHome config, you'll find a compiled list of all registers
-I've identified. Those marked with a question mark are not confirmed,
-but an 'educated guess' only.
+I've identified.
+
+A list of all Delata Solivia interters registers is published and can be found (here)[https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf]
 
 Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
