@@ -130,7 +130,7 @@ bit 4 = 1 -> L2 Voltage failure
 bit 5 = 1 -> L3 Voltage failure
 bit 6 = 1 -> L1 Frequency failure
 bit 7 = 1 -> L2 Frequency failure
-```
+
 
 When inverter is active value is 0. When inactive value is 4.
 On device init in the morning, value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
@@ -146,4 +146,3 @@ bit 11 = 1 -> PV3- grounding failure
 bit 13 = 1 -> PV2 voltage too low failure
 bit 14 = 1 -> PV3 voltage too low failure
 bit 15 = 1 -> Internal failure
-```
