@@ -105,7 +105,7 @@ Register address:
 0x5E - 0x5F:  AC voltage L1 V             236                   00:EC
 0x60 - 0x61:  AC frequency (50,00 Hz)     5000                  13:88
 0x62 - 0x63:  AC Power L1 W               868                   03:64
-0x64 - 0x65:  AC Reactive Power VAR       -178                  FF:4E
+0x64 - 0x65:  AC Reactive Power L1 VAR    -178                  FF:4E
 0x7A - 0x7B:  ISO+ resistance kΩ          2200                  08:98
 0x7C - 0x7D:  ISO- resistance kΩ          2000                  07:D0
 0x7E - 0x7F:  Temperature ambient °C      50                    00:33
