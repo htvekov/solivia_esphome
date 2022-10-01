@@ -18,15 +18,12 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
     Sensor *ac_a = new Sensor();
     Sensor *dc_a = new Sensor();
     Sensor *freq = new Sensor();
-    Sensor *hs_1 = new Sensor();
-    Sensor *hs_2 = new Sensor();
+    Sensor *temp_amb = new Sensor();
+    Sensor *temp_hs = new Sensor();
     Sensor *iso_plus = new Sensor();
     Sensor *iso_minus = new Sensor();
-    
-    
-    Sensor *unknown_0x64 = new Sensor();
-    Sensor *unknown_0x65 = new Sensor();
-    Sensor *unknown_0x91 = new Sensor();
+    Sensor *ac_react = new Sensor();
+   
   
   void setup() override {
 
@@ -84,12 +81,12 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
         iso_minus_data.Byte[0] = bytes[0x7D +6]; // ISO- lsb
         iso_minus_data.Byte[1] = bytes[0x7C +6]; // ISO- msb
 
-        TwoByte hs_1_data;
-        hs_1_data.Byte[0] = bytes[0x7F +6]; // Heat sink#1 lsb
-        hs_1_data.Byte[1] = bytes[0x7E +6]; // Heat sink#1 msb
-        TwoByte hs_2_data;
-        hs_2_data.Byte[0] = bytes[0x81 +6]; // Heat sink#2 lsb
-        hs_2_data.Byte[1] = bytes[0x80 +6]; // Heat sink#2 msb
+        TwoByte temp_amb_data;
+        temp_amb_data.Byte[0] = bytes[0x7F +6]; // Heat sink#1 lsb
+        temp_amb_data.Byte[1] = bytes[0x7E +6]; // Heat sink#1 msb
+        TwoByte temp_hs_data;
+        temp_hs_data.Byte[0] = bytes[0x81 +6]; // Heat sink#2 lsb
+        temp_hs_data.Byte[1] = bytes[0x80 +6]; // Heat sink#2 msb
 
         TwoByte d_yield_data;
         d_yield_data.Byte[0] = bytes[0xB5 +6]; // Daily yield lsb
@@ -99,17 +96,10 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
             (unsigned char)(bytes[0x87 +6]) << 16 |
             (unsigned char)(bytes[0x88 +6]) << 8 |
             (unsigned char)(bytes[0x89 +6]));  // Total yield (4 bytes float)
-
     
-        TwoByte unknown_0x64_data;
-        unknown_0x64_data.Byte[0] = bytes[0x64 +6]; // Unknown lsb
-        unknown_0x64_data.Byte[1] = 0; // bytes[0x64 +6]; // unknown msb
-        TwoByte unknown_0x65_data;
-        unknown_0x65_data.Byte[0] = bytes[0x65 +6]; // Unknown lsb
-        unknown_0x65_data.Byte[1] = 0; // bytes[0x64 +6]; // unknown msb
-        TwoByte unknown_0x91_data;
-        unknown_0x91_data.Byte[0] = bytes[0x91 +6]; // Unknown lsb
-        unknown_0x91_data.Byte[1] = 0; // bytes[0x90 +6]; // unknown msb
+        int16_t ac_react_data;
+        ac_react_data.Byte[0] = bytes[0x65 +6]; // Unknown lsb
+        ac_react_data.Byte[1] = bytes[0x64 +6]; // unknown msb
 
         char etx;
         etx = bytes[261]; // ETX byte (last byte)
@@ -132,15 +122,12 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
           ac_a->publish_state(ac_a_data.UInt16);
           ac_power->publish_state(ac_power_data.UInt16);
           freq->publish_state(freq_data.UInt16);
-          hs_1->publish_state(hs_1_data.UInt16);
-          hs_2->publish_state(hs_2_data.UInt16);
+          temp_amb->publish_state(temp_amb_data.UInt16);
+          temp_hs->publish_state(temp_hs_data.UInt16);
           iso_plus->publish_state(iso_plus_data.UInt16);
           iso_minus->publish_state(iso_minus_data.UInt16);
-          
-
-          unknown_0x64->publish_state(unknown_0x64_data.UInt16);
-          unknown_0x65->publish_state(unknown_0x65_data.UInt16);
-          unknown_0x91->publish_state(unknown_0x91_data.UInt16);
+	  ac_react->publish_state(ac_react_data.UInt16);
+        
 
 	        ESP_LOGI("custom", "ETX check OK: %i", etx);
           ESP_LOGI("custom", "Daily yield: %i Wh", d_yield_data.UInt16);
