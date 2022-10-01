@@ -233,23 +233,12 @@ sensor:
     filters:
     - throttle: 60s
   
-  - name: "unknown_0x64"
+  - name: "AC Reactive Power"
     device_class: energy
-    unit_of_measurement: W
+    unit_of_measurement: VAR
     filters:
     - throttle: 60s
 
-  - name: "unknown_0x65"
-    device_class: energy
-    unit_of_measurement: W
-    filters:
-    - throttle: 60s
-  
-  - name: "unknown_0x91"
-    device_class: energy
-    unit_of_measurement: W
-    filters:
-    - throttle: 60s
   
 
 
