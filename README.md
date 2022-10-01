@@ -29,6 +29,7 @@ So almost all commands/registers do not match other examples on the net.
 Package structure is also somewhat different.
 
 A list of all Delata Solivia inverters registers and the communication protocol is published and can be found here https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf
+
 With this list it will be easy to tweak my configuration to fit your inverter variant.
 
 Tested on both ESP8266 with software uart and ESP32 with hardware uart.
