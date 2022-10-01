@@ -52,8 +52,8 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
 	    if (bytes.size() == 262) {
         
         TwoByte dc_power_data;
-        dc_power_data.Byte[0] = bytes[0x4B +6]; // DC Power lsb
-        dc_power_data.Byte[1] = bytes[0x4A +6]; // DC Power msb
+        dc_power_data.Byte[0] = bytes[0x4B +6]; // DC power lsb
+        dc_power_data.Byte[1] = bytes[0x4A +6]; // DC power msb
         TwoByte dc_v_data;
         dc_v_data.Byte[0] = bytes[0x4D +6]; // DC voltage lsb
         dc_v_data.Byte[1] = bytes[0x4C +6]; // DC voltage msb
@@ -68,8 +68,8 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
         ac_v_data.Byte[0] = bytes[0x5F + 6]; // AC voltage lsb
         ac_v_data.Byte[1] = bytes[0x5E + 6]; // AC voltage lsb
         TwoByte freq_data;
-        freq_data.Byte[0] = bytes[0x61 + 6]; // Frequency lsb
-        freq_data.Byte[1] = bytes[0x60 + 6]; // Frequency msb
+        freq_data.Byte[0] = bytes[0x61 + 6]; // AC frequency lsb
+        freq_data.Byte[1] = bytes[0x60 + 6]; // AC frequency msb
         TwoByte ac_power_data;
         ac_power_data.Byte[0] = bytes[0x63 +6]; // AC power lsb
         ac_power_data.Byte[1] = bytes[0x62 +6]; // AC power msb
@@ -120,17 +120,16 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
           ac_v->publish_state(ac_v_data.UInt16);
           ac_a->publish_state(ac_a_data.UInt16);
           ac_power->publish_state(ac_power_data.UInt16);
+          ac_react->publish_state(ac_react_data.Int16);
           freq->publish_state(freq_data.UInt16);
           temp_amb->publish_state(temp_amb_data.Int16);
           temp_hs->publish_state(temp_hs_data.Int16);
           iso_plus->publish_state(iso_plus_data.UInt16);
           iso_minus->publish_state(iso_minus_data.UInt16);
-	  ac_react->publish_state(ac_react_data.Int16);
         
-
-	        ESP_LOGI("custom", "ETX check OK: %i", etx);
-          ESP_LOGI("custom", "Daily yield: %i Wh", d_yield_data.UInt16);
-	        ESP_LOGI("custom", "Current production: %i W", ac_power_data.UInt16);
+	  ESP_LOGI("custom", "ETX check OK: %i", etx);
+	  ESP_LOGI("custom", "Daily yield: %i Wh", d_yield_data.UInt16);
+	  ESP_LOGI("custom", "Current production: %i W", ac_power_data.UInt16);
         
           bytes.clear();
       }
