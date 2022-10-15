@@ -4,7 +4,7 @@
 ### Remember to copy the Custom Component solivia.h file to the ESPHome folder in Home Assistant !!
 
 This config doesn't send any commands to the inverter !!
-Instead it relies on the gateways constant request for data (appx. 1 package pr. second).
+Instead it relies on the gateways constant request for data (appx. 1,5 packages pr. second).
 
 If you don't have a gateway, the package request can instead easily be send from
 ESPHome using `uart.write` and eg. triggered via the ESPHome Time component.
