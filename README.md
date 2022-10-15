@@ -131,9 +131,9 @@ bit 04 = 1 -> L2 Voltage failure
 bit 05 = 1 -> L3 Voltage failure
 bit 06 = 1 -> L1 Frequency failure
 bit 07 = 1 -> L2 Frequency failure
-```
 
 When inverter is active bit#02 is cleared. When inactive bit#02 is set.
+```
 
 ### 0x94: Inverter status register 2 (4 bytes - 32 bits in total):
 ```yaml
