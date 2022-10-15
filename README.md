@@ -3,7 +3,7 @@
 
 ### Remember to copy the Custom Component solivia.h file to the ESPHome folder in Home Assistant !!
 
-This config doesn't send any commands to the inverter !!
+This config doesn't send any commands to the inverter !!<br />
 Instead it relies on the gateways constant request for data (appx. 1,5 packages pr. second).
 
 If you don't have a gateway, the package request can instead easily be send from
