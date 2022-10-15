@@ -25,12 +25,15 @@ time:
 ### NOTE !!
 My inverter, unlike most examples found on the net, returns a 255 bytes
 response. Most common inverter response length is 150 bytes (0x96) or 157 (0x9D).
-So almost all commands/registers do not match other examples on the net.
+So almost all commands/registers don't match other examples on the net.
 Package structure is also somewhat different.
 
 A list of all Delta Solivia inverters registers and the communication protocol is published and can be found here: https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf
 
 Using above list, it will be easy to tweak my configuration to fit your inverter variant.
+it-koncept has tweaked this config and revised the registers to get a working solution
+for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters:
+https://github.com/it-koncept/Solvia-Inverter-G3
 
 Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
@@ -130,9 +133,7 @@ bit 06 = 1 -> L1 Frequency failure
 bit 07 = 1 -> L2 Frequency failure
 ```
 
-When inverter is active value is 0. When inactive value is 4.
-On device init in the morning, value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
-Sometimes values above 4 are also observed during inverter shutdown in the evening.
+When inverter is active bit#02 is cleared. When inactive bit#02 is set.
 
 ### 0x94: Inverter status register 2 (4 bytes - 32 bits in total):
 ```yaml
