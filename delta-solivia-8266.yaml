@@ -29,17 +29,21 @@
 # 
 # My inverter, unlike most examples found on the net, returns a 255 bytes response.
 # Most common inverter response length is 150 bytes (0x96) or 157 (0x9D).
-# So almost all commands/registers do not match other examples on the net.
+# So almost all commands/registers don't match other examples on the net.
 # Package structure is also somewhat different.
 #
 # A list of all Delta Solivia inverters registers and the communication protocol is published
 # and can be found here: https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf
 #
 # Using above list, it will be easy to tweak my configuration to fit your inverter variant.
-
-# Tested on both ESP8266 with software uart and ESP32 with hardware uart.
-# I experience no issues in production with the ESP8266 software uart.
-# Not even with debug uart logging active.
+#
+# it-koncept has tweaked this config and revised the registers to get a working solution
+# for his 3 x Delta Solivia 3.0/3.3 EU G3 inverters: https://github.com/it-koncept/Solvia-Inverter-G3
+#
+# Tested on both ESP8266 with software & hardware uart and ESP32 with hardware uart only.
+# I experience minor ESPHome <--> Home Assistant connection issues using the ESP8266 software uart.
+# So I've revised my production config to use the hw uart pins instead. This is rock solid.
+# But remember to turn off debug communication on the uart pins.
 #
 # My config:
 # Inverter part no.: EOE46010287
@@ -63,7 +67,6 @@
 # - uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03] will response
 # correctly with serial no.
 
-
 esphome:
   name: "delta-solivia-8266"
   platform: ESP8266
@@ -72,9 +75,11 @@ esphome:
     - solivia.h
     
 # Enable logging
+# Set baud_rate to 0 if you're using hw uart, in order to disable logging via uart pins
 logger:
-#level: VERBOSE
-  #baud_rate: 0
+  baud_rate: 0
+#  level: VERBOSE
+  
 
 # Enable Home Assistant API
 api:
@@ -115,18 +120,32 @@ captive_portal:
 
 binary_sensor:
   - platform: status
-    name: "Solivia Node Status"
-    id: solivia_status
- 
+    name: "Solar Node Status"
+  - platform: template
+    name: "Solivia night status"
+    # Check bit 2 for night status
+    lambda: |-
+      if (((int(id(solar_status_1).state)) >> (2)) & 1) return 1; else return 0;
+
+# Example on how to return a text string instead of the binary inverter night status 
+#text_sensor:
+#  - platform: template
+#    name: "Solivia night status"
+#    # Check bit 2 for night status
+#    lambda: |-
+#      if (((int(id(solar_status_1).state)) >> (2)) & 1) return (std::string)"Inverter idle"; else return (std::string)"Inverter active";
+
 uart:
   id: mod_bus
-  # tx_pin: 17 # Typical tx pin for hardware UART#2 on ESP32 modules
-  # rx_pin: 16 # Typical rx pin for hardware UART#2 on ESP32 modules
-  tx_pin: 5 # D2 ESP8266 tx pin for soft serial uart
-  rx_pin: 4 # D1 ESP8266 rx pin for soft serial uart
+  #tx_pin: 17 # Typical tx pin for hardware UART#2 on ESP32 modules
+  #rx_pin: 16 # Typical rx pin for hardware UART#2 on ESP32 modules
+  #tx_pin: 5 # D1 ESP8266 tx pin for soft serial uart
+  #rx_pin: 4 # D2 ESP8266 rx pin for soft serial uart
+  tx_pin: 1 # D10 ESP8266 tx pin for hw serial uart
+  rx_pin: 3 # D9 ESP8266 tx pin for hw serial uart
   # Increase buffer size as total package we're sniffing is 262 bytes in total
   # Inverter reply: 6 bytes + Data: 255 bytes + ETX: 1 byte = 262 bytes
-  rx_buffer_size: 512
+  rx_buffer_size: 1024
   baud_rate: 19200
   parity: NONE
   stop_bits: 1
@@ -137,9 +156,9 @@ sensor:
   lambda: |-
     auto delta = new solivia(id(mod_bus));
     App.register_component(delta);
-    return {delta->ac_power, delta->d_yield, delta->dc_a, delta->dc_v, delta->ac_a, delta->ac_v, delta->freq, delta->temp_amb, delta->temp_hs, delta->t_yield, delta->dc_power, delta->iso_plus, delta->iso_minus, delta->ac_react};
+    return {delta->ac_power, delta->d_yield, delta->dc_a, delta->dc_v, delta->ac_a, delta->ac_v, delta->freq, delta->temp_amb, delta->temp_hs, delta->t_yield, delta->dc_power, delta->iso_plus, delta->iso_minus, delta->ac_react, delta->status_1, delta->status_2};
   sensors:
-  - name: "AC power"
+  - name: "Solar AC power"
     #icon: mdi:SolarPowerVariant
     device_class: energy
     unit_of_measurement: W
@@ -196,13 +215,13 @@ sensor:
     - throttle: 60s
     - multiply: 0.01
   
-  - name: "Temperature - ambient"
+  - name: "Solar ambient temperature"
     device_class: temperature
     unit_of_measurement: °C
     filters:
     - throttle: 60s
   
-  - name: "Temperature - heatsink"
+  - name: "Solar heatsink temperature"
     device_class: temperature
     unit_of_measurement: °C
     filters:
@@ -216,38 +235,51 @@ sensor:
     - throttle: 60s
     - multiply: 0.001
   
-  - name: "DC Power"
+  - name: "Solar DC power"
     device_class: energy
     unit_of_measurement: W
     accuracy_decimals: 0
     filters:
     - throttle: 60s
   
-  - name: "ISO +"
+  - name: "Solar ISO +"
     device_class: energy
     unit_of_measurement: kΩ
     filters:
     - throttle: 60s
   
-  - name: "ISO -"
+  - name: "Solar ISO -"
     device_class: energy
     unit_of_measurement: kΩ
     filters:
     - throttle: 60s
   
-  - name: "AC Reactive Power"
+  - name: "Solar AC reactive power"
     device_class: energy
     unit_of_measurement: VAR
     filters:
     - throttle: 60s
-
-  
+    
+  - name: "Solar Status 1 (bit 0-7)"
+    #internal: true
+    id: solar_status_1
+    device_class: energy
+    filters:
+    - throttle: 60s
+    
+  - name: "Solar Status 2 (bit 8-15)"
+    #internal: true
+    id: solar_status_2
+    device_class: energy
+    filters:
+    - throttle: 60s
 
 
 # Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
 # Request:  02:05:01:02:60:01:85:FC:03
 # Response: 02:06:01:FF:60:01
+
 # Package data:
 # 0x00   45:4F:45:34:36:30:31:30:32:38:37:31:31:33:32:38
 # 0x10   37:30:38:31:33:30:31:30:30:33:33:39:38:31:33:30
@@ -265,7 +297,7 @@ sensor:
 # 0xD0   00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
 # 0xE0   00:00:00:00:00:00:00:00:00:00:00:00:00:00:00:00
 # 0xF0   00:00:00:00:00:00:00:00:00:00:00:00:00:34:A4:03
-#
+
 # Register address:
 # 0x00 - 0x0A:  SAP part no.                EOE46010287           45:4F:45:34:36:30:31:30:32:38:37
 # 0x0B - 0x1C:  SAP serial no.              113287081301003398    31:31:33:32:38:37:30:38:31:33:30:31:30:30:33:33:39:38
@@ -289,14 +321,31 @@ sensor:
 # 0x7E - 0x7F:  Temperature ambient °C      50                    00:33
 # 0x80 - 0x81:  Temperature heatsink °C     50                    00:33
 # 0x86 - 0x89:  Total yield (34881,086 kWh) 34881086              02:14:3E:3E
-# 0x8A - 0x8C:  Uptime total in minutes     2508966               00:26:48:A6
-# 0x91 - 0x91:  Inverter status ?           0                     00
+# 0x8A - 0x8D:  Uptime total in minutes     2508966               00:26:48:A6
+# 0x91 - 0x91:  Status 1 - bit 0 to 7       0                     00
+# 0x94 - 0x94:  Status 2 - bit 8 to 15      0                     00
 # 0xB4 - 0xB5:  Daily power yield Wh        2295                  08:F7
 # 0xB8 - 0xB9:  Uptime today in minutes     278                   01:16
-#
-# Observations on the unknown registers:
-#
-# 0x91 - 0x91: Device status register ?
-# When inverter is active value is 0. When inactive value is 4
-# On device init in the morning value shifts rapidly from 4 to 6, from 6 to 8, from 8 back to 2 and finally to 0 (inverter active)
-# Sometimes values above 4 are also observed during inverter shutdown in the evening.
+
+# 0x91: Inverter status register 1 (4 bytes - 32 bits in total):
+# bit 00 = 1 -> Self test ongoing
+# bit 01 = 1 -> Firmware update
+# bit 02 = 1 -> Night mode                   Check for Night mode
+# bit 03 = 1 -> L1 Voltage failure           Check for L1 Voltage failure
+# bit 04 = 1 -> L2 Voltage failure
+# bit 05 = 1 -> L3 Voltage failure
+# bit 06 = 1 -> L1 Frequency failure
+# bit 07 = 1 -> L2 Frequency failure
+
+# When inverter is active bit#02 is cleared. When inactive bit#02 is set.
+
+# 0x94: Inverter status register 2 (4 bytes - 32 bits in total):
+
+# bit 08 = 1 -> PV3 Iso startup failure
+# bit 09 = 1 -> PV3 Iso running failure
+# bit 10 = 1 -> PV3+ grounding failure
+# bit 11 = 1 -> PV3- grounding failure
+# bit 12 = 1 -> PV1 voltage too low failure   Check for PV1 voltage too low failure
+# bit 13 = 1 -> PV2 voltage too low failure
+# bit 14 = 1 -> PV3 voltage too low failure
+# bit 15 = 1 -> Internal failure
