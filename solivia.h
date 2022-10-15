@@ -150,9 +150,8 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
           status_1->publish_state(status_1_data.UInt16);
           status_2->publish_state(status_2_data.UInt16);
 
-	        ESP_LOGI("custom", "ETX check OK: %i", etx);
-          ESP_LOGI("custom", "Daily yield: %i Wh", d_yield_data.UInt16);
-	        ESP_LOGI("custom", "Current production: %i W", ac_power_data.UInt16);
+	        ESP_LOGI("custom", "ETX check OK: %i - ESPHome sensors updated", etx);
+          ESP_LOGI("custom", "Current production: %i W / Daily yield: %i Wh", ac_power_data.UInt16, d_yield_data.UInt16);
         
           bytes.clear();
       }
