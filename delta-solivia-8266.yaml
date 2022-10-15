@@ -78,8 +78,7 @@ esphome:
 # Set baud_rate to 0 if you're using hw uart, in order to disable logging via uart pins
 logger:
   baud_rate: 0
-#  level: VERBOSE
-  
+#  level: VERBOSE 
 
 # Enable Home Assistant API
 api:
