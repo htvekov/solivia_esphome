@@ -30,9 +30,10 @@ Package structure is also somewhat different.
 
 A list of all Delta Solivia inverters registers and the communication protocol is published and can be found here: https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf
 
-Using above list, it will be easy to tweak my configuration to fit your inverter variant.
+Using above list, it will be easy to tweak my configuration to fit your inverter variant.<br />
 it-koncept has tweaked this config and revised the registers to get a working solution
-for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters: https://github.com/it-koncept/Solvia-Inverter-G3
+for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters:<br />
+https://github.com/it-koncept/Solvia-Inverter-G3
 
 Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
