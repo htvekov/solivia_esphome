@@ -8,7 +8,7 @@
 
 class solivia : public PollingComponent, public Sensor, public UARTDevice {
   public:
-    solivia(UARTComponent *parent) : PollingComponent(600), UARTDevice(parent) {}
+    solivia(UARTComponent *parent) : PollingComponent(400), UARTDevice(parent) {}
     Sensor *d_yield = new Sensor();
     Sensor *t_yield = new Sensor();
     Sensor *ac_power = new Sensor();
@@ -23,13 +23,15 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
     Sensor *iso_plus = new Sensor();
     Sensor *iso_minus = new Sensor();
     Sensor *ac_react = new Sensor();
-   
+    Sensor *status_1 = new Sensor();
+    Sensor *status_2 = new Sensor();
   
   void setup() override {
 
   }
 
   std::vector<int> bytes;
+  int count = 15;
 
   //void loop() override {
 
@@ -51,9 +53,21 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
       
 	    if (bytes.size() == 262) {
         
+        // Some 15 packages are recieved appx. every 10 seconds
+        // With this counter we will only update ESPHome sensor appx. every 10 seconds
+        // NB. Remove this counter if you're not using a Solivia Gateway. 
+        count--;
+        if (count != 0) {
+          ESP_LOGI("custom", "Update ESPHome sensors in: %i seconds", count);
+          bytes.clear();
+          continue;
+        }
+
+        count = 15;
+
         TwoByte dc_power_data;
-        dc_power_data.Byte[0] = bytes[0x4B +6]; // DC power lsb
-        dc_power_data.Byte[1] = bytes[0x4A +6]; // DC power msb
+        dc_power_data.Byte[0] = bytes[0x4B +6]; // DC Power lsb
+        dc_power_data.Byte[1] = bytes[0x4A +6]; // DC Power msb
         TwoByte dc_v_data;
         dc_v_data.Byte[0] = bytes[0x4D +6]; // DC voltage lsb
         dc_v_data.Byte[1] = bytes[0x4C +6]; // DC voltage msb
@@ -68,15 +82,15 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
         ac_v_data.Byte[0] = bytes[0x5F + 6]; // AC voltage lsb
         ac_v_data.Byte[1] = bytes[0x5E + 6]; // AC voltage lsb
         TwoByte freq_data;
-        freq_data.Byte[0] = bytes[0x61 + 6]; // AC frequency lsb
-        freq_data.Byte[1] = bytes[0x60 + 6]; // AC frequency msb
+        freq_data.Byte[0] = bytes[0x61 + 6]; // Frequency lsb
+        freq_data.Byte[1] = bytes[0x60 + 6]; // Frequency msb
         TwoByte ac_power_data;
-        ac_power_data.Byte[0] = bytes[0x63 +6]; // AC power lsb
-        ac_power_data.Byte[1] = bytes[0x62 +6]; // AC power msb
-	TwoByte ac_react_data;
+        ac_power_data.Byte[0] = bytes[0x63 +6]; // AC Power lsb
+        ac_power_data.Byte[1] = bytes[0x62 +6]; // AC Power msb
+        TwoByte ac_react_data;
         ac_react_data.Byte[0] = bytes[0x65 +6]; // AC reactive power lsb
-        ac_react_data.Byte[1] = bytes[0x64 +6]; // AC reactive poser msb
-        
+        ac_react_data.Byte[1] = bytes[0x64 +6]; // AC reactive power msb
+
         TwoByte iso_plus_data;
         iso_plus_data.Byte[0] = bytes[0x7B +6]; // ISO+ lsb
         iso_plus_data.Byte[1] = bytes[0x7A +6]; // ISO+ msb
@@ -100,6 +114,13 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
             (unsigned char)(bytes[0x88 +6]) << 8 |
             (unsigned char)(bytes[0x89 +6]));  // Total yield (4 bytes float)
 
+        TwoByte status_1_data;
+        status_1_data.Byte[0] = bytes[0x91 +6]; // Status 1 (bit 0-7)
+        status_1_data.Byte[1] = 0;
+        TwoByte status_2_data;
+        status_2_data.Byte[0] = 0;
+        status_2_data.Byte[1] = bytes[0x94 +6]; // Status 2 (bit 8-15)
+
         char etx;
         etx = bytes[261]; // ETX byte (last byte)
 
@@ -111,7 +132,7 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
           bytes.clear();
           continue;
         }
-          
+
           d_yield->publish_state(d_yield_data.UInt16);
           t_yield->publish_state(t_yield_data);
           dc_v->publish_state(dc_v_data.UInt16);
@@ -126,10 +147,12 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
           temp_hs->publish_state(temp_hs_data.Int16);
           iso_plus->publish_state(iso_plus_data.UInt16);
           iso_minus->publish_state(iso_minus_data.UInt16);
-        
-	  ESP_LOGI("custom", "ETX check OK: %i", etx);
-	  ESP_LOGI("custom", "Daily yield: %i Wh", d_yield_data.UInt16);
-	  ESP_LOGI("custom", "Current production: %i W", ac_power_data.UInt16);
+          status_1->publish_state(status_1_data.UInt16);
+          status_2->publish_state(status_2_data.UInt16);
+
+	        ESP_LOGI("custom", "ETX check OK: %i", etx);
+          ESP_LOGI("custom", "Daily yield: %i Wh", d_yield_data.UInt16);
+	        ESP_LOGI("custom", "Current production: %i W", ac_power_data.UInt16);
         
           bytes.clear();
       }
