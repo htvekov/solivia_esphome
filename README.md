@@ -32,9 +32,7 @@ A list of all Delta Solivia inverters registers and the communication protocol i
 
 Using above list, it will be easy to tweak my configuration to fit your inverter variant.
 it-koncept has tweaked this config and revised the registers to get a working solution
-for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters:
-
-https://github.com/it-koncept/Solvia-Inverter-G3
+for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters: https://github.com/it-koncept/Solvia-Inverter-G3
 
 Tested on both ESP8266 with software uart and ESP32 with hardware uart.
 I experience no issues in production with the ESP8266 software uart.
