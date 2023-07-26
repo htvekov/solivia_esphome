@@ -141,7 +141,7 @@ class solivia : public PollingComponent, public Sensor, public UARTDevice {
           ac_v->publish_state(ac_v_data.UInt16);
           ac_a->publish_state(ac_a_data.UInt16);
           ac_power->publish_state(ac_power_data.UInt16);
-          ac_react->publish_state(ac_react_data.Int16);
+          ac_react->publish_state(abs(ac_react_data.Int16));
           freq->publish_state(freq_data.UInt16);
           temp_amb->publish_state(temp_amb_data.Int16);
           temp_hs->publish_state(temp_hs_data.Int16);
