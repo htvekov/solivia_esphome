@@ -1,13 +1,13 @@
 
 #          ESPHome Custom Component Modbus sniffer for Delta Solvia Inverter 3.0 EU G4 TR installed with Solivia Gateway M1 D2.
 
-### Remember to copy the Custom Component solivia.h file to the ESPHome folder in Home Assistant !!
+### Remember to copy the Custom Component `solivia.h` file to the ESPHome folder in Home Assistant !!
 
-This config doesn't send any commands to the inverter !!<br />
-Instead it relies on the gateways constant request for data (appx. 1,5 packages pr. second).
+>NOTE: This config doesn't send any package request commands to the inverter !!<br />
+>Config instead relies on the Solivia Gateway constant data package requests (appx. 1,5 packages pr. second).
 
-If you don't have a gateway, the package request can instead easily be send from
-ESPHome using `uart.write` and eg. triggered via the ESPHome Time component.
+A Solivia Gateway is not mandatory to utilize this ESPHome Modbus configuration<br />
+The package request command can instead easily be send from ESPHome using `uart.write` and e.g. triggered via the ESPHome Time component.
 
 ### Example:
 ```yaml
@@ -23,20 +23,20 @@ time:
 ```
 
 ### NOTE !!
-My inverter, unlike most examples found on the net, returns a 255 bytes
+Unlike most examples found on the net, my inverter returns a 255 bytes
 response. Most common inverter response length is 150 bytes (0x96) or 157 (0x9D).
-So almost all commands/registers don't match other examples on the net.
+So almost no commands/registers match other examples published on the net.
 Package structure is also somewhat different.
 
-A list of all Delta Solivia inverters registers and the communication protocol is published and can be found here: https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf
+A list of all Delta Solivia inverters registers and the communication protocol is now finally publicly available and can be found [here](https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf).
 
 Using above list, it will be easy to tweak my configuration to fit your inverter variant.<br />
-it-koncept has tweaked this config and revised the registers to get a working solution
-for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters: https://github.com/it-koncept/Solvia-Inverter-G3
+[it-koncept](https://github.com/it-koncept) has tweaked this config and revised the registers to get a [working solution](https://github.com/it-koncept/Solvia-Inverter-G3)
+for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters.
 
-Tested on both ESP8266 with software & hardware uart and ESP32 with hardware uart only.
+I've tested on both ESP8266 with software & hardware uart and ESP32 with hardware uart only.
 I experience minor ESPHome <--> Home Assistant connection issues using the ESP8266 software uart.
-So I've revised my production config to use the hw uart pins instead. This is rock solid.
+So I've revised my production config to use the hardware uart pins instead. This is rock solid.
 But remember to turn off debug communication on the uart pins.
 
 ### My config:
@@ -54,14 +54,14 @@ Gateway request: 02:05:01:02:60:01:85:FC:03
 Inverter response: 02:06:01:FF:60:01 + 255 data bytes (incl. CRC bytes) + ETX byte
 ```
 
-Actually the response doesn't match the protocol, as the CRC bytes and trailing
+The response actually doesn't match the protocol, as the CRC bytes and trailing
 ETX byte should be excluded from data length identifier (0xFF)
 Here, strangely enough, the CRC is included, but not the ETX ?
 
 A few of the 'public known' commands have been tested. Most unfortunately did fail.
 Haven't really spend much time on testing further commands, as all the data
 i need is in gateway package.
-But commmand for eg. inverters serial no. is working ok on my inverter.
+But commmand for e.g. inverters serial no. is working ok on my inverter.
 ```yaml
 - uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03]
 ```
