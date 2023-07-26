@@ -65,7 +65,7 @@ But commmand for e.g. inverters serial no. is working ok on my inverter.
 ```yaml
 - uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03]
 ```
-will response correctly with serial no.
+Above command will response correctly with serial no.
 
 ### Complete 'live' package example - captured [2022-08-08 10:32:54 GMT+1]:
 
