@@ -6,7 +6,7 @@
 >NOTE: This config doesn't send any package request commands to the inverter !!<br />
 >Config instead relies on the Solivia Gateway constant data package requests (appx. 1,5 packages pr. second).
 
-A Solivia Gateway is not mandatory to utilize this ESPHome Modbus configuration<br />
+A Solivia Gateway is not mandatory to utilize this ESPHome Modbus configuration.<br />
 The package request command can instead easily be send from ESPHome using `uart.write` and e.g. triggered via the ESPHome Time component.
 
 ### Example:
