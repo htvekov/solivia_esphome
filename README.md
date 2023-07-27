@@ -3,10 +3,10 @@
 
 ### Remember to copy the Custom Component `solivia.h` file to the ESPHome folder in Home Assistant !!
 
->NOTE: This config doesn't send any package request commands to the inverter !!<br />
+> :memo: This config doesn't send any package request commands to the inverter !!<br />
 >Config instead relies on the Solivia Gateway constant data package requests (appx. 1,5 packages pr. second).
 
-A Solivia Gateway is not mandatory to utilize this ESPHome Modbus configuration.<br />
+A Solivia Gateway is *not* mandatory to utilize this ESPHome Modbus configuration.<br />
 The package request command can instead easily be send from ESPHome using `uart.write` and e.g. triggered via the ESPHome Time component.
 
 ### Example:
@@ -22,15 +22,14 @@ time:
           - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]
 ```
 
-### NOTE !!
-Unlike most examples found on the net, my inverter returns a 255 bytes
-response. Most common inverter response length is 150 bytes (0x96) or 157 (0x9D).
-So almost no commands/registers match other examples published on the net.
-Package structure is also somewhat different.
+> :memo: Unlike most examples found on the net, my inverter returns a 255 bytes response.
+>Most common inverter response length is 150 bytes (0x96) or 157 (0x9D).
+>So almost no commands/registers match other examples published on the net.
+>Package structure is also somewhat different.
 
-A list of all Delta Solivia inverters registers and the communication protocol is now finally publicly available and can be found [here](https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf).
-
+:bulb: A list of all Delta Solivia inverters registers and the communication protocol is now finally publicly available and can be found [here](https://forums.ni.com/ni/attachments/ni/170/1007166/1/Public%20RS485%20Protocol%201V2.pdf).<br />
 Using above list, it will be easy to tweak my configuration to fit your inverter variant.<br />
+
 [it-koncept](https://github.com/it-koncept) has tweaked this config and revised the registers to get a [working solution](https://github.com/it-koncept/Solvia-Inverter-G3)
 for his 3 x Delta Solivia 3.0 EU G3 & Delta Solivia 3.3 EU G3 inverters.
 
