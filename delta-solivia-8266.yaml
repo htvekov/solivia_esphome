@@ -40,10 +40,10 @@
 # it-koncept has tweaked this config and revised the registers to get a working solution
 # for his 3 x Delta Solivia 3.0/3.3 EU G3 inverters: https://github.com/it-koncept/Solvia-Inverter-G3
 #
-# Tested on both ESP8266 with software & hardware uart and ESP32 with hardware uart only.
-# I experience minor ESPHome <--> Home Assistant connection issues using the ESP8266 software uart.
-# So I've revised my production config to use the hw uart pins instead. This is rock solid.
-# But remember to turn off debug communication on the uart pins.
+# Tested on both ESP8266 with software & hardware UART and ESP32 with hardware UART only.
+# I experience minor ESPHome <--> Home Assistant connection issues using the ESP8266 software UART.
+# So I've revised my production config to use the hardware UART pins instead. This is rock solid.
+# But remember to turn off debug communication on the UART pins.
 #
 # My config:
 # Inverter part no.: EOE46010287
