@@ -67,44 +67,92 @@
 # - uart.write: [0x02, 0x05, 0x01, 0x02, 0x00, 0x01, 0xAD, 0xFC, 0x03] will response
 # correctly with serial no.
 
-esphome:
-  name: "delta-solivia-8266"
+
+#############################################
+#   Substitutions section contains all the  #
+# user/device specific configurable details #
+#############################################
+substitutions:
+  devicename: delta-solivia-8266 
+  friendly_name: Solivia
+  device_description: Delta Solivia Modbus node
   platform: ESP8266
   board: d1_mini
+  wifi: !secret wifi_ssid_tp
+  password: !secret wifi_password_tp
+  ip: !secret static_ip_solivia
+  gateway: !secret gateway
+  ha_api_key: !secret api_key
+  ap_password: !secret wifi_ap_password
+  ota_password: !secret solivia_ota_password
+  uart_tx: "1" # GPIO1 = D10 - TX pin for hardware UART on ESP8266
+  uart_rx: "3" # GPIO3 = D9  - TX pin for hardware UART on ESP8266
+  # uart_tx: "5" # GPIO5 = D1 - Typical TX pin for software UART on ESP8266
+  # uart_rx: "4" # GPIO4 = D2 - Typical RX pin for software UART on ESP8266
+  # uart_tx: "17" # GPIO17 = D27 - Default TX pin for hardware UART#2 on ESP32 modules
+  # uart_rx: "16" # GPIO16 = D25 - Default RX pin for hardware UART#2 on ESP32 modules
+
+###############################################
+#               Main YAML block               #
+# You should not need to edit below this line #
+############################################### 
+esphome:
+  name: ${devicename}
+  friendly_name: ${friendly_name}
+  comment: ${device_description}
+  platform: ${platform}
+  board: ${board}
   includes:
     - solivia.h
-    
+
+uart:
+  id: mod_bus
+  tx_pin: ${uart_tx}
+  rx_pin: ${uart_rx}
+  # Increase buffer size as total package we're sniffing is 262 bytes in total
+  # Inverter reply: 6 bytes + Data: 255 bytes + ETX: 1 byte = 262 bytes
+  rx_buffer_size: 1024
+  baud_rate: 19200
+  parity: NONE
+  stop_bits: 1
+  #debug: # Activate if you need to investigate package details in the log
+
+
 # Enable logging
-# Set baud_rate to 0 if you're using hw uart, in order to disable logging via uart pins
+# Set baud rate to 0 if you're using hardware UART, in order to disable logging via UART pins
 logger:
   baud_rate: 0
-#  level: VERBOSE 
+#  level: VERBOSE
+  
 
 # Enable Home Assistant API
 api:
   encryption:
-    key: "my_api_key"
+    key: ${ha_api_key}
+
 
 ota:
-  password: "my_ota_password"
+  password: ${ota_password}
+
 
 wifi:
-  ssid: "my_ssid"
-  password: "my_password"
+  ssid: ${wifi}
+  password: ${password}
   manual_ip:
-    static_ip: xxx.xxx.x.xx
-    gateway: xxx.xxx.x.x
+    static_ip: ${ip}
+    gateway: ${gateway}
     subnet: 255.255.255.0
-  
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  # Enable fallback hotspot (captive portal) in case WiFi connection fails
   ap:
-    ssid: "Solivia_8266 Fallback Hotspot"
-    password: "my_fallback_password"
+    ssid: ${friendly_name} Fallback Hotspot
+    password: ${ap_password}
+
 
 captive_portal:
 
+
 # Remove hash signs and activate, if you don't have a Solivia gataway.
-# With this you emulate the gateways request for data response from the inverter.
+# With this you emulate the gateways request for data response from the inverter
 # With settings below, the requests are send every 10 seconds.
 #
 #time:
@@ -117,14 +165,17 @@ captive_portal:
 #        then:
 #          - uart.write: [0x02, 0x05, 0x01, 0x02, 0x60, 0x01, 0x85, 0xFC, 0x03]
 
+
 binary_sensor:
   - platform: status
-    name: "Solar Node Status"
+    name: "Node status"
   - platform: template
-    name: "Solivia night status"
+    name: "Night status"
+    icon: mdi:toggle-switch-outline
     # Check bit 2 for night status
     lambda: |-
       if (((int(id(solar_status_1).state)) >> (2)) & 1) return 1; else return 0;
+
 
 # Example on how to return a text string instead of the binary inverter night status 
 #text_sensor:
@@ -134,23 +185,26 @@ binary_sensor:
 #    lambda: |-
 #      if (((int(id(solar_status_1).state)) >> (2)) & 1) return (std::string)"Inverter idle"; else return (std::string)"Inverter active";
 
-uart:
-  id: mod_bus
-  #tx_pin: 17 # Typical tx pin for hardware UART#2 on ESP32 modules
-  #rx_pin: 16 # Typical rx pin for hardware UART#2 on ESP32 modules
-  #tx_pin: 5 # D1 ESP8266 tx pin for soft serial uart
-  #rx_pin: 4 # D2 ESP8266 rx pin for soft serial uart
-  tx_pin: 1 # D10 ESP8266 tx pin for hw serial uart
-  rx_pin: 3 # D9 ESP8266 tx pin for hw serial uart
-  # Increase buffer size as total package we're sniffing is 262 bytes in total
-  # Inverter reply: 6 bytes + Data: 255 bytes + ETX: 1 byte = 262 bytes
-  rx_buffer_size: 1024
-  baud_rate: 19200
-  parity: NONE
-  stop_bits: 1
-  #debug: # Activate if you need to investigate package details in the log
 
 sensor:
+# Uptime sensor / WiFi strength in db and percentage
+- platform: uptime
+  name: "Uptime sensor"
+
+- platform: wifi_signal
+  id: solivia_wifi_strength_db
+  name: "WiFi strength db"
+  update_interval: 60s
+  entity_category: "diagnostic"
+
+- platform: copy # Reports the WiFi signal strength in %
+  source_id: solivia_wifi_strength_db
+  name: "WiFi strength pct."
+  filters:
+    - lambda: return min(max(2 * (x + 100.0), 0.0), 100.0);
+  unit_of_measurement: "%"
+  entity_category: "diagnostic"
+
 - platform: custom
   lambda: |-
     auto delta = new solivia(id(mod_bus));
@@ -158,7 +212,7 @@ sensor:
     return {delta->ac_power, delta->d_yield, delta->dc_a, delta->dc_v, delta->ac_a, delta->ac_v, delta->freq, delta->temp_amb, delta->temp_hs, delta->t_yield, delta->dc_power, delta->iso_plus, delta->iso_minus, delta->ac_react, delta->status_1, delta->status_2};
   sensors:
   - name: "Solar AC power"
-    #icon: mdi:SolarPowerVariant
+    icon: mdi:solar-power
     device_class: energy
     unit_of_measurement: W
     accuracy_decimals: 0
@@ -167,7 +221,7 @@ sensor:
     - throttle: 10s 
   
   - name: "Solar daily yield"
-    #icon: mdi:SolarPower
+    icon: mdi:solar-power-variant
     device_class: energy
     # Set state_class in order for HA to use sensor in the Energy component
     state_class: total_increasing
@@ -178,6 +232,7 @@ sensor:
   
   - name: "Solar DC current"
     device_class: energy
+    icon: mdi:current-dc
     unit_of_measurement: A
     accuracy_decimals: 1
     filters:
@@ -186,6 +241,7 @@ sensor:
   
   - name: "Solar DC voltage"
     device_class: energy
+    icon: mdi:current-dc
     unit_of_measurement: V
     accuracy_decimals: 0
     filters:
@@ -193,6 +249,7 @@ sensor:
   
   - name: "Solar AC current"
     device_class: energy
+    icon: mdi:current-ac
     unit_of_measurement: A
     accuracy_decimals: 1
     filters:
@@ -201,6 +258,7 @@ sensor:
   
   - name: "Solar AC voltage"
     device_class: energy
+    icon: mdi:current-ac
     unit_of_measurement: V
     accuracy_decimals: 0
     filters:
@@ -208,6 +266,7 @@ sensor:
   
   - name: "Solar frequency"
     device_class: energy
+    icon: mdi:sine-wave
     unit_of_measurement: Hz
     accuracy_decimals: 2
     filters:
@@ -228,6 +287,7 @@ sensor:
   
   - name: "Solar total yield"
     device_class: energy
+    icon: mdi:lightning-bolt-circle
     unit_of_measurement: kWh
     accuracy_decimals: 0
     filters:
@@ -236,25 +296,27 @@ sensor:
   
   - name: "Solar DC power"
     device_class: energy
+    icon: mdi:lightning-bolt
     unit_of_measurement: W
     accuracy_decimals: 0
     filters:
     - throttle: 60s
   
   - name: "Solar ISO +"
-    device_class: energy
+    icon: mdi:omega
     unit_of_measurement: kΩ
     filters:
     - throttle: 60s
   
   - name: "Solar ISO -"
-    device_class: energy
+    icon: mdi:omega
     unit_of_measurement: kΩ
     filters:
     - throttle: 60s
   
   - name: "Solar AC reactive power"
     device_class: energy
+    icon: mdi:lightning-bolt
     unit_of_measurement: VAR
     filters:
     - throttle: 60s
@@ -262,14 +324,14 @@ sensor:
   - name: "Solar Status 1 (bit 0-7)"
     #internal: true
     id: solar_status_1
-    device_class: energy
+    icon: mdi:checkbox-marked-circle-outline
     filters:
     - throttle: 60s
     
   - name: "Solar Status 2 (bit 8-15)"
     #internal: true
     id: solar_status_2
-    device_class: energy
+    icon: mdi:checkbox-marked-circle-outline
     filters:
     - throttle: 60s
 
@@ -339,7 +401,6 @@ sensor:
 # When inverter is active bit#02 is cleared. When inactive bit#02 is set.
 
 # 0x94: Inverter status register 2 (4 bytes - 32 bits in total):
-
 # bit 08 = 1 -> PV3 Iso startup failure
 # bit 09 = 1 -> PV3 Iso running failure
 # bit 10 = 1 -> PV3+ grounding failure
