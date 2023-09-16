@@ -213,7 +213,6 @@ sensor:
   sensors:
   - name: "Solar AC power"
     icon: mdi:solar-power
-    device_class: energy
     unit_of_measurement: W
     accuracy_decimals: 0
     # Frequent update, as sensor is used to calculate consumption with iem3155 sensor.total_active_power
@@ -221,6 +220,7 @@ sensor:
     - throttle: 10s 
   
   - name: "Solar daily yield"
+    id: solar_daily_yield
     icon: mdi:solar-power-variant
     device_class: energy
     # Set state_class in order for HA to use sensor in the Energy component
@@ -231,7 +231,6 @@ sensor:
     - throttle: 60s
   
   - name: "Solar DC current"
-    device_class: energy
     icon: mdi:current-dc
     unit_of_measurement: A
     accuracy_decimals: 1
@@ -240,7 +239,6 @@ sensor:
     - multiply: 0.1
   
   - name: "Solar DC voltage"
-    device_class: energy
     icon: mdi:current-dc
     unit_of_measurement: V
     accuracy_decimals: 0
@@ -248,7 +246,6 @@ sensor:
     - throttle: 60s
   
   - name: "Solar AC current"
-    device_class: energy
     icon: mdi:current-ac
     unit_of_measurement: A
     accuracy_decimals: 1
@@ -257,7 +254,6 @@ sensor:
     - multiply: 0.1
   
   - name: "Solar AC voltage"
-    device_class: energy
     icon: mdi:current-ac
     unit_of_measurement: V
     accuracy_decimals: 0
@@ -265,7 +261,6 @@ sensor:
     - throttle: 60s
   
   - name: "Solar frequency"
-    device_class: energy
     icon: mdi:sine-wave
     unit_of_measurement: Hz
     accuracy_decimals: 2
@@ -295,7 +290,6 @@ sensor:
     - multiply: 0.001
   
   - name: "Solar DC power"
-    device_class: energy
     icon: mdi:lightning-bolt
     unit_of_measurement: W
     accuracy_decimals: 0
@@ -315,7 +309,6 @@ sensor:
     - throttle: 60s
   
   - name: "Solar AC reactive power"
-    device_class: energy
     icon: mdi:lightning-bolt
     unit_of_measurement: VAR
     filters:
